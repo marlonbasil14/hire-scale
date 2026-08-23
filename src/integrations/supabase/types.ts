@@ -14,7 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      job_evaluations: {
+        Row: {
+          cargo_nome: string
+          criado_em: string
+          diretoria_area: string
+          faixa_max: number
+          faixa_min: number
+          familia_cargo: string
+          grade: number
+          id: string
+          ja_ocupado: boolean
+          pontos: number
+          reporta_a: string
+          respostas: Json
+        }
+        Insert: {
+          cargo_nome: string
+          criado_em?: string
+          diretoria_area: string
+          faixa_max: number
+          faixa_min: number
+          familia_cargo: string
+          grade: number
+          id?: string
+          ja_ocupado: boolean
+          pontos: number
+          reporta_a: string
+          respostas: Json
+        }
+        Update: {
+          cargo_nome?: string
+          criado_em?: string
+          diretoria_area?: string
+          faixa_max?: number
+          faixa_min?: number
+          familia_cargo?: string
+          grade?: number
+          id?: string
+          ja_ocupado?: boolean
+          pontos?: number
+          reporta_a?: string
+          respostas?: Json
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
