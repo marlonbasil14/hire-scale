@@ -254,7 +254,7 @@ export function calcularResultado(indices: number[]): Resultado {
   );
   const pontos = Math.exp(INTERCEPT + soma);
 
-  let linha = ESCALA_GRADES[0];
+  let linha: (typeof ESCALA_GRADES)[number] = ESCALA_GRADES[0];
   for (const candidata of ESCALA_GRADES) {
     if (candidata[1] <= pontos) linha = candidata;
   }
