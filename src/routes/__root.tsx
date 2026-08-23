@@ -9,6 +9,7 @@ import {
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 
+import { Toaster } from "@/components/ui/sonner";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
@@ -77,19 +78,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { name: "author", content: "Chlorum Solutions" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
+      { rel: "stylesheet", href: appCss },
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: appCss,
+        href: "https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..900;1,200..900&display=swap",
       },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
@@ -102,7 +101,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="pt-BR">
       <head>
         <HeadContent />
       </head>
@@ -114,13 +113,65 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+function SiteNav() {
+  const itemClass =
+    "rounded-full px-4 py-2 text-sm font-bold text-muted-foreground transition-colors hover:bg-secondary hover:text-accent-foreground";
+
+  return (
+    <header className="sticky top-0 z-40 border-b border-border bg-surface/90 backdrop-blur">
+      <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6">
+        <Link to="/" className="flex items-baseline gap-2">
+          <span className="text-lg font-extrabold tracking-tight text-primary">
+            Chlorum
+          </span>
+          <span className="text-eyebrow text-muted-foreground">
+            People Intelligence
+          </span>
+        </Link>
+        <nav className="flex items-center gap-1">
+          <Link
+            to="/"
+            className={itemClass}
+            activeOptions={{ exact: true }}
+            activeProps={{ className: "bg-secondary text-accent-foreground" }}
+          >
+            Nova avaliação
+          </Link>
+          <Link
+            to="/historico"
+            className={itemClass}
+            activeProps={{ className: "bg-secondary text-accent-foreground" }}
+          >
+            Histórico
+          </Link>
+        </nav>
+      </div>
+    </header>
+  );
+}
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <div className="flex min-h-screen flex-col">
+        <SiteNav />
+        <main className="flex-1">
+          {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+          <Outlet />
+        </main>
+        <footer className="mt-16 bg-navy px-4 py-8 text-navy-foreground sm:px-6">
+          <div className="mx-auto max-w-5xl space-y-1">
+            <p className="text-sm font-bold">Chlorum Solutions · Pessoas e Cultura</p>
+            <p className="text-xs font-light text-navy-foreground/70">
+              Pré-pesagem de cargos calibrada no método Hay Guide Chart-Profile.
+            </p>
+          </div>
+        </footer>
+      </div>
+      <Toaster position="top-center" />
     </QueryClientProvider>
   );
 }
+
