@@ -43,7 +43,7 @@ export function Badge({ className, ...props }: React.ComponentProps<"span">) {
   return (
     <span
       className={cn(
-        "text-eyebrow inline-flex items-center rounded-full bg-accent-soft px-3 py-1 text-accent-foreground",
+        "inline-flex items-center rounded-full bg-accent-soft px-3 py-1 text-[11px] font-bold uppercase tracking-[0.12em] text-accent-foreground",
         className,
       )}
       {...props}

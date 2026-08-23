@@ -38,7 +38,7 @@ export function ResultadoView({
           <GaugeGrade grade={data.grade} />
         </div>
 
-        <div className="-mt-2">
+        <div className="mt-2">
           <p className="text-label">Pontuação total estimada</p>
           <p className="text-5xl font-extrabold tracking-tight text-primary sm:text-6xl">
             {Math.round(data.pontos).toLocaleString("pt-BR")}
