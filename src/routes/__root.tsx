@@ -10,6 +10,7 @@ import {
 import { useEffect, type ReactNode } from "react";
 
 import { Toaster } from "@/components/ui/sonner";
+import { Wordmark } from "@/components/Wordmark";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
@@ -88,7 +89,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..900;1,200..900&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..900;1,200..900&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap",
       },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
@@ -124,9 +125,7 @@ function SiteNav() {
           <span className="text-lg font-extrabold tracking-tight text-primary">
             Chlorum
           </span>
-          <span className="text-eyebrow text-muted-foreground">
-            People Intelligence
-          </span>
+          <Wordmark className="text-base" />
         </Link>
         <nav className="flex items-center gap-1">
           <Link
