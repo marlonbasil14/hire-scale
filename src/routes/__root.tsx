@@ -10,6 +10,7 @@ import {
 import { useEffect, type ReactNode } from "react";
 
 import { Toaster } from "@/components/ui/sonner";
+import { Wordmark } from "@/components/Wordmark";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
@@ -124,9 +125,7 @@ function SiteNav() {
           <span className="text-lg font-extrabold tracking-tight text-primary">
             Chlorum
           </span>
-          <span className="text-eyebrow text-muted-foreground">
-            People Intelligence
-          </span>
+          <Wordmark className="text-base" />
         </Link>
         <nav className="flex items-center gap-1">
           <Link
