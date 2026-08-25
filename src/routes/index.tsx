@@ -3,7 +3,7 @@ import { ArrowLeft, ArrowRight, RotateCcw, Save } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
-import { PageHeader } from "@/components/PageHeader";
+import { Hero } from "@/components/Hero";
 import { ResultadoView } from "@/components/ResultadoView";
 import { Badge, Button, Card, Field, Input, Select } from "@/components/chlorum";
 import { supabase } from "@/integrations/supabase/client";
