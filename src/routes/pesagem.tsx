@@ -1,28 +1,29 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { ArrowLeft, ArrowRight, RotateCcw, Save } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
-import { Hero } from "@/components/Hero";
+import { PageHeader } from "@/components/PageHeader";
 import { ResultadoView } from "@/components/ResultadoView";
 import { Badge, Button, Card, Field, Input, Select } from "@/components/chlorum";
 import { supabase } from "@/integrations/supabase/client";
+import { lerColaborador, type Colaborador } from "@/lib/colaborador";
 import { FATORES, calcularResultado } from "@/lib/pesagem";
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/pesagem")({
   head: () => ({
     meta: [
-      { title: "Painel de Pesagem de Cargos — Chlorum Solutions" },
+      { title: "Etapas da pesagem de cargos — Chlorum Solutions" },
       {
         name: "description",
         content:
-          "Pré-pesagem de cargos novos da Chlorum Solutions: 8 fatores, pontuação, grade de 1 a 20 e família de cargo.",
+          "Percorra as três etapas da pré-pesagem: identificação do cargo, questionário de 8 fatores e resultado com grade de 1 a 20.",
       },
-      { property: "og:title", content: "Painel de Pesagem de Cargos — Chlorum Solutions" },
+      { property: "og:title", content: "Etapas da pesagem de cargos — Chlorum Solutions" },
       {
         property: "og:description",
         content:
-          "Avalie cargos novos pelo método Hay Guide Chart-Profile e obtenha grade, pontos e família de cargo.",
+          "Identificação, questionário Hay Guide Chart-Profile e resultado com pontos, grade e família de cargo.",
       },
     ],
   }),
@@ -43,8 +44,27 @@ const IDENTIFICACAO_VAZIA: Identificacao = {
   jaOcupado: "",
 };
 
+const ETAPAS = [
+  {
+    titulo: "1 · Identificação do cargo",
+    texto:
+      "Informe nome do cargo, diretoria/área, a quem se reporta e se já existe ocupante. Todos são critérios sine qua non.",
+  },
+  {
+    titulo: "2 · Questionário de 8 fatores",
+    texto:
+      "Responda um fator por tela, deslizando o nível que melhor descreve o cargo — do menor ao maior grau de exigência.",
+  },
+  {
+    titulo: "3 · Resultado e histórico",
+    texto:
+      "Veja pontos, grade de 1 a 20 e família de cargo. Salve no histórico para consultar e comparar depois.",
+  },
+];
+
 function NovaAvaliacao() {
   const navigate = useNavigate();
+  const [colaborador, setColaborador] = useState<Colaborador | null>(null);
   const [etapa, setEtapa] = useState<"identificacao" | "questionario" | "resultado">(
     "identificacao",
   );
@@ -54,6 +74,16 @@ function NovaAvaliacao() {
   const [tocados, setTocados] = useState<boolean[]>(() => FATORES.map(() => false));
   const [salvando, setSalvando] = useState(false);
   const [salvo, setSalvo] = useState(false);
+
+  useEffect(() => {
+    const c = lerColaborador();
+    if (!c) {
+      navigate({ to: "/", replace: true });
+      return;
+    }
+    setColaborador(c);
+  }, [navigate]);
+
 
   const identificacaoValida =
     identificacao.cargoNome.trim() !== "" &&
