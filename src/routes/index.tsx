@@ -110,10 +110,7 @@ function NovaAvaliacao() {
 
   return (
     <div className="mx-auto max-w-5xl space-y-8 px-4 py-10 sm:px-6 sm:py-14">
-      <PageHeader
-        titulo="Painel de Pesagem de Cargos"
-        lead="Avalie cargos novos ainda sem ocupante em oito fatores e obtenha, em minutos, a pontuação estimada, o grade de 1 a 20 e a família de cargo correspondente."
-      />
+      <Hero />
 
       {etapa === "identificacao" && (
         <Card className="space-y-6">
