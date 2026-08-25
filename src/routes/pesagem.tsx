@@ -140,7 +140,27 @@ function NovaAvaliacao() {
 
   return (
     <div className="mx-auto max-w-5xl space-y-8 px-4 py-10 sm:px-6 sm:py-14">
-      <Hero />
+      <PageHeader
+        titulo="Como funciona a pesagem"
+        lead={
+          colaborador
+            ? `Olá, ${colaborador.nome.split(" ")[0]}. A pré-pesagem acontece em três etapas guiadas — leve cerca de cinco minutos por cargo.`
+            : "A pré-pesagem acontece em três etapas guiadas — leve cerca de cinco minutos por cargo."
+        }
+      />
+
+      <div className="grid gap-4 sm:grid-cols-3">
+        {ETAPAS.map((e) => (
+          <Card key={e.titulo} className="space-y-2">
+            <p className="text-label text-primary">{e.titulo}</p>
+            <p className="text-sm font-light leading-relaxed text-muted-foreground">
+              {e.texto}
+            </p>
+          </Card>
+        ))}
+      </div>
+
+
 
       {etapa === "identificacao" && (
         <Card className="space-y-6">
