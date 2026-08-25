@@ -4,6 +4,7 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
@@ -115,8 +116,11 @@ function RootShell({ children }: { children: ReactNode }) {
 }
 
 function SiteNav() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
   const itemClass =
     "rounded-full px-4 py-2 text-sm font-bold text-muted-foreground transition-colors hover:bg-secondary hover:text-accent-foreground";
+
+  if (pathname === "/") return null;
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-surface/90 backdrop-blur">
@@ -129,9 +133,8 @@ function SiteNav() {
         </Link>
         <nav className="flex items-center gap-1">
           <Link
-            to="/"
+            to="/pesagem"
             className={itemClass}
-            activeOptions={{ exact: true }}
             activeProps={{ className: "bg-secondary text-accent-foreground" }}
           >
             Nova avaliação
