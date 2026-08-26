@@ -163,7 +163,7 @@ function NovaAvaliacao() {
         }
       />
 
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-3" data-nao-imprimir>
         {ETAPAS.map((e) => (
           <Card key={e.titulo} className="space-y-2">
             <p className="text-label text-primary">{e.titulo}</p>
