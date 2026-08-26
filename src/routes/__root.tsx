@@ -164,11 +164,23 @@ function RootComponent() {
           <Outlet />
         </main>
         <footer className="mt-16 bg-navy px-4 py-8 text-navy-foreground sm:px-6">
-          <div className="mx-auto max-w-5xl space-y-1">
-            <p className="text-sm font-bold">Chlorum Solutions · Pessoas e Cultura</p>
-            <p className="text-xs font-light text-navy-foreground/70">
-              Pré-pesagem de cargos calibrada no método Hay Guide Chart-Profile.
-            </p>
+          <div className="mx-auto flex max-w-5xl flex-wrap items-end justify-between gap-6">
+            <div className="space-y-2">
+              <BrandLockup variante="gestao" reversa className="text-lg" />
+              <p className="text-xs font-light text-navy-foreground/70">
+                Em parceria com Gente e Remuneração · Pré-pesagem de cargos calibrada no
+                método Hay Guide Chart-Profile.
+              </p>
+            </div>
+            <div className="ml-auto flex flex-col items-end gap-2">
+              <BrandLockup
+                variante="remuneracao"
+                comAssinaturaCorporativa={false}
+                reversa
+                className="text-base"
+              />
+              <ChlorumLogo className="h-9 opacity-90" />
+            </div>
           </div>
         </footer>
       </div>
