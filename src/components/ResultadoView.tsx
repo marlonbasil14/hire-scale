@@ -17,6 +17,10 @@ export type ResultadoViewData = {
   faixaMax: number;
   familiaCargo: string;
   respostas: Resposta[];
+  textoFluido?: string;
+  salarioPiso?: number | null;
+  salarioMediana?: number | null;
+  salarioTeto?: number | null;
 };
 
 export function ResultadoView({
@@ -26,6 +30,20 @@ export function ResultadoView({
   data: ResultadoViewData;
   children?: React.ReactNode;
 }) {
+  const [copiado, setCopiado] = useState(false);
+
+  async function copiar() {
+    if (!data.textoFluido) return;
+    try {
+      await navigator.clipboard.writeText(data.textoFluido);
+      setCopiado(true);
+      toast.success("Texto copiado para a área de transferência.");
+      setTimeout(() => setCopiado(false), 2000);
+    } catch {
+      toast.error("Não foi possível copiar o texto.");
+    }
+  }
+
   return (
     <div className="space-y-6 print-resultado">
       <Card className="text-center">
