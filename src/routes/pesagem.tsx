@@ -393,6 +393,12 @@ function NovaAvaliacao() {
             reportaA: identificacao.reportaA,
             jaOcupado: identificacao.jaOcupado === "sim",
             ...resultado,
+            textoFluido,
+            salarioPiso: faixaSalarial.status === "ok" ? Number(faixaSalarial.piso_80) : null,
+            salarioMediana:
+              faixaSalarial.status === "ok" ? Number(faixaSalarial.mediana) : null,
+            salarioTeto:
+              faixaSalarial.status === "ok" ? Number(faixaSalarial.teto_120) : null,
           }}
         >
           <div className="flex flex-wrap justify-end gap-3">
