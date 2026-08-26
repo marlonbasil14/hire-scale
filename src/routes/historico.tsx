@@ -56,6 +56,11 @@ type Avaliacao = {
   faixa_max: number;
   familia_cargo: string;
   criado_em: string;
+  salario_piso: number | null;
+  salario_mediana: number | null;
+  salario_teto: number | null;
+  requer_confirmacao_executiva: boolean;
+  texto_fluido: string | null;
 };
 
 const FAIXAS_GRADE = [
