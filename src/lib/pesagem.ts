@@ -231,11 +231,74 @@ export const ESCALA_GRADES = [
   [20, 1610, 1739, 1878, "C-level"],
 ] as const;
 
+export type Refinamento = "abaixo" | "tipica" | "acima";
+
+export type Selecao = {
+  indice: number;
+  refinamento: Refinamento;
+};
+
+export const SELECAO_PADRAO: Selecao = { indice: -1, refinamento: "tipica" };
+
+/** "Comunicação e influência" tem apenas 3 níveis, sem refinamento. */
+export function temRefinamento(fator: Fator) {
+  return fator.key !== "comunicacao";
+}
+
+export const ROTULO_REFINAMENTO: Record<Refinamento, string> = {
+  abaixo: "− Abaixo da faixa",
+  tipica: "Faixa típica",
+  acima: "+ Acima da faixa",
+};
+
+export function sufixoCodigo(refinamento: Refinamento) {
+  return refinamento === "abaixo" ? "-" : refinamento === "acima" ? "+" : "";
+}
+
+export function codigoNivel(fator: Fator, indice: number, refinamento: Refinamento) {
+  const sufixo = temRefinamento(fator) ? sufixoCodigo(refinamento) : "";
+  return `${fator.key}.${indice + 1}${sufixo}`;
+}
+
+export function nomeNivel(fator: Fator, indice: number, refinamento: Refinamento) {
+  const base = fator.niveis[indice] ?? "";
+  if (!temRefinamento(fator) || refinamento === "tipica") return base;
+  return `${base} — ${refinamento === "abaixo" ? "abaixo da faixa" : "acima da faixa"}`;
+}
+
+/**
+ * Contribuição do nível escolhido, já incluindo o refinamento −/padrão/+:
+ * o refinamento move um terço do passo do fator na direção do nível vizinho.
+ */
+export function contribuicaoNivel(
+  fator: Fator,
+  indice: number,
+  refinamento: Refinamento,
+) {
+  const base = fator.contribuicao[indice] ?? 0;
+  if (!temRefinamento(fator) || refinamento === "tipica") return base;
+
+  const anterior = fator.contribuicao[indice - 1];
+  const proximo = fator.contribuicao[indice + 1];
+  const passoAbaixo =
+    anterior !== undefined ? base - anterior : proximo !== undefined ? proximo - base : 0;
+  const passoAcima =
+    proximo !== undefined ? proximo - base : anterior !== undefined ? base - anterior : 0;
+
+  return refinamento === "abaixo" ? base - passoAbaixo / 3 : base + passoAcima / 3;
+}
+
 export type Resposta = {
+  fatorKey: string;
+  /** compatibilidade com registros antigos do histórico */
   key: string;
   fator: string;
-  indice: number;
+  codigo: string;
+  nome: string;
   nivel: string;
+  indice: number;
+  refinamento: Refinamento;
+  contribuicao: number;
 };
 
 export type Resultado = {
@@ -247,11 +310,25 @@ export type Resultado = {
   respostas: Resposta[];
 };
 
-export function calcularResultado(indices: number[]): Resultado {
-  const soma = FATORES.reduce(
-    (acc, fator, i) => acc + (fator.contribuicao[indices[i] ?? 0] ?? 0),
-    0,
-  );
+export function calcularResultado(selecoes: Selecao[]): Resultado {
+  const respostas: Resposta[] = FATORES.map((fator, i) => {
+    const selecao = selecoes[i] ?? SELECAO_PADRAO;
+    const indice = Math.max(0, selecao.indice);
+    const refinamento = temRefinamento(fator) ? selecao.refinamento : "tipica";
+    return {
+      fatorKey: fator.key,
+      key: fator.key,
+      fator: fator.titulo,
+      codigo: codigoNivel(fator, indice, refinamento),
+      nome: nomeNivel(fator, indice, refinamento),
+      nivel: fator.niveis[indice] ?? "",
+      indice,
+      refinamento,
+      contribuicao: contribuicaoNivel(fator, indice, refinamento),
+    };
+  });
+
+  const soma = respostas.reduce((acc, r) => acc + r.contribuicao, 0);
   const pontos = Math.exp(INTERCEPT + soma);
 
   let linha: (typeof ESCALA_GRADES)[number] = ESCALA_GRADES[0];
@@ -265,11 +342,7 @@ export function calcularResultado(indices: number[]): Resultado {
     faixaMin: linha[1],
     faixaMax: linha[3],
     familiaCargo: linha[4],
-    respostas: FATORES.map((fator, i) => ({
-      key: fator.key,
-      fator: fator.titulo,
-      indice: indices[i] ?? 0,
-      nivel: fator.niveis[indices[i] ?? 0] ?? "",
-    })),
+    respostas,
   };
 }
+
