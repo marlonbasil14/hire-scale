@@ -85,7 +85,7 @@ export function ResultadoView({
 
   return (
     <div className="space-y-6 print-resultado">
-      <Card className="text-center">
+      <Card className="text-center" ref={quadroRef}>
         <Badge>Resultado da pré-pesagem</Badge>
         <h2 className="mt-4 text-2xl sm:text-3xl">{data.cargoNome}</h2>
         <p className="mt-1 text-sm text-muted-foreground">
