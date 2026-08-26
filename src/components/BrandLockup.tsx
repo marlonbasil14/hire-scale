@@ -31,9 +31,11 @@ const CONFIG: Record<
 
 export function BrandSeal({
   variante = "gestao",
+  reversa = false,
   className,
 }: {
   variante?: Variante;
+  reversa?: boolean;
   className?: string;
 }) {
   const c = CONFIG[variante];
@@ -41,11 +43,15 @@ export function BrandSeal({
     <span
       aria-hidden
       className={cn(
-        "inline-flex aspect-square items-center justify-center rounded-full font-lockup font-bold leading-none text-white",
+        "inline-flex aspect-square items-center justify-center rounded-full font-lockup font-bold leading-none",
         "size-[2.6em] text-[1.05em]",
         className,
       )}
-      style={{ backgroundColor: c.cor }}
+      style={
+        reversa
+          ? { backgroundColor: "#ffffff", color: c.cor }
+          : { backgroundColor: c.cor, color: "#ffffff" }
+      }
     >
       {c.sigla}
     </span>
@@ -71,11 +77,7 @@ export function BrandLockup({
       className={cn("inline-flex items-center gap-3 text-[1.5rem] leading-none", className)}
       aria-label={`${c.nome} — Chlorum Solutions`}
     >
-      <BrandSeal
-        variante={variante}
-        className={reversa ? "bg-white!" : undefined}
-        {...(reversa ? {} : {})}
-      />
+      <BrandSeal variante={variante} reversa={reversa} />
       <span className="flex flex-col items-start gap-[0.15em]">
         <span className="font-lockup font-semibold" style={{ color: corTexto }}>
           {c.primeira} <em className="italic">{c.assinatura}</em>
