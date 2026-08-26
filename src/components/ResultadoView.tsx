@@ -1,6 +1,8 @@
-import { Info } from "lucide-react";
+import { Check, Copy, Info } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 
-import { Badge, Card } from "@/components/chlorum";
+import { Badge, Button, Card } from "@/components/chlorum";
 import { GaugeGrade } from "@/components/GaugeGrade";
 import { FATORES, type Resposta } from "@/lib/pesagem";
 
