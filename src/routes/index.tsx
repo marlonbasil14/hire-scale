@@ -52,7 +52,7 @@ function HeroPage() {
       <div className="card-surface w-full max-w-xl px-6 py-10 text-center sm:px-12 sm:py-12">
         <div className="flex flex-col items-center gap-6">
           <BrandLockup variante="gestao" className="text-[1.7rem]" />
-          <BrandParceria className="text-sm" />
+          <BrandParceria somenteParceiro className="text-sm" />
 
           <h1 className="leading-none">
             <Wordmark className="text-3xl sm:text-4xl" />

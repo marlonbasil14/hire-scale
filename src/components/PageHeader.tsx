@@ -15,7 +15,7 @@ export function PageHeader({
         <Badge className="gap-1.5">
           Gente e Gestão ·<Wordmark className="text-[13px]" />
         </Badge>
-        <BrandParceria className="text-xs" />
+        <BrandParceria somenteParceiro className="text-xs" />
       </div>
       <h1 className="text-3xl leading-tight sm:text-4xl lg:text-5xl">{titulo}</h1>
       <p className="max-w-2xl text-base font-light leading-relaxed text-muted-foreground">

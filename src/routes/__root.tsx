@@ -179,7 +179,9 @@ function RootComponent() {
                 reversa
                 className="text-base"
               />
-              <ChlorumLogo className="h-9 opacity-90" />
+              <span className="rounded-lg bg-white px-3 py-2">
+                <ChlorumLogo className="h-7" />
+              </span>
             </div>
           </div>
         </footer>
