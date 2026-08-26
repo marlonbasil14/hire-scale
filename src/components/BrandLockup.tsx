@@ -34,9 +34,9 @@ export function BrandSeal({
   reversa = false,
   className,
 }: {
-  variante?: Variante;
-  reversa?: boolean;
-  className?: string;
+  variante?: Variante | undefined;
+  reversa?: boolean | undefined;
+  className?: string | undefined;
 }) {
   const c = CONFIG[variante];
   return (
@@ -64,10 +64,10 @@ export function BrandLockup({
   reversa = false,
   className,
 }: {
-  variante?: Variante;
-  comAssinaturaCorporativa?: boolean;
-  reversa?: boolean;
-  className?: string;
+  variante?: Variante | undefined;
+  comAssinaturaCorporativa?: boolean | undefined;
+  reversa?: boolean | undefined;
+  className?: string | undefined;
 }) {
   const c = CONFIG[variante];
   const corTexto = reversa ? "#ffffff" : c.cor;
