@@ -18,6 +18,11 @@ import {
   type Refinamento,
   type Selecao,
 } from "@/lib/pesagem";
+import {
+  buscarFaixaSalarial,
+  gerarTextoFluido,
+  type TabelaSalarialRow,
+} from "@/lib/salario";
 
 export const Route = createFileRoute("/pesagem")({
   head: () => ({
