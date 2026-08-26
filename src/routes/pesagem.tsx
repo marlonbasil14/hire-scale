@@ -286,7 +286,7 @@ function NovaAvaliacao() {
                     <button
                       type="button"
                       aria-pressed={ativo}
-                      className="focus-ring-brand w-full rounded-lg text-left"
+                      className="focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring w-full rounded-lg text-left"
                       onClick={() =>
                         atualizarSelecao({ indice: i, refinamento: "tipica" })
                       }
@@ -320,7 +320,7 @@ function NovaAvaliacao() {
                             onClick={() =>
                               atualizarSelecao({ indice: i, refinamento: r })
                             }
-                            className={`focus-ring-brand rounded-full px-2 py-1.5 text-[11px] font-bold transition-colors duration-150 ease-out ${
+                            className={`focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring rounded-full px-2 py-1.5 text-[11px] font-bold transition-colors duration-150 ease-out ${
                               selecaoAtual.refinamento === r
                                 ? "bg-primary text-primary-foreground"
                                 : "text-accent-foreground hover:bg-card"
