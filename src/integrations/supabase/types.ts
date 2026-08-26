@@ -27,7 +27,12 @@ export type Database = {
           ja_ocupado: boolean
           pontos: number
           reporta_a: string
+          requer_confirmacao_executiva: boolean
           respostas: Json
+          salario_mediana: number | null
+          salario_piso: number | null
+          salario_teto: number | null
+          texto_fluido: string
         }
         Insert: {
           cargo_nome: string
@@ -41,7 +46,12 @@ export type Database = {
           ja_ocupado: boolean
           pontos: number
           reporta_a: string
+          requer_confirmacao_executiva?: boolean
           respostas: Json
+          salario_mediana?: number | null
+          salario_piso?: number | null
+          salario_teto?: number | null
+          texto_fluido?: string
         }
         Update: {
           cargo_nome?: string
@@ -55,7 +65,48 @@ export type Database = {
           ja_ocupado?: boolean
           pontos?: number
           reporta_a?: string
+          requer_confirmacao_executiva?: boolean
           respostas?: Json
+          salario_mediana?: number | null
+          salario_piso?: number | null
+          salario_teto?: number | null
+          texto_fluido?: string
+        }
+        Relationships: []
+      }
+      tabela_salarial: {
+        Row: {
+          atualizado_em: string
+          grade: number
+          mediana: number
+          nivel_nome: string
+          p110: number | null
+          p90: number | null
+          piso_80: number | null
+          tabela_origem: string
+          teto_120: number | null
+        }
+        Insert: {
+          atualizado_em?: string
+          grade: number
+          mediana: number
+          nivel_nome: string
+          p110?: number | null
+          p90?: number | null
+          piso_80?: number | null
+          tabela_origem?: string
+          teto_120?: number | null
+        }
+        Update: {
+          atualizado_em?: string
+          grade?: number
+          mediana?: number
+          nivel_nome?: string
+          p110?: number | null
+          p90?: number | null
+          piso_80?: number | null
+          tabela_origem?: string
+          teto_120?: number | null
         }
         Relationships: []
       }

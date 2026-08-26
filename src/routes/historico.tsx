@@ -56,6 +56,11 @@ type Avaliacao = {
   faixa_max: number;
   familia_cargo: string;
   criado_em: string;
+  salario_piso: number | null;
+  salario_mediana: number | null;
+  salario_teto: number | null;
+  requer_confirmacao_executiva: boolean;
+  texto_fluido: string | null;
 };
 
 const FAIXAS_GRADE = [
@@ -146,6 +151,13 @@ function Historico() {
               faixaMax: detalhe.faixa_max,
               familiaCargo: detalhe.familia_cargo,
               respostas: detalhe.respostas ?? [],
+              textoFluido: detalhe.texto_fluido ?? undefined,
+              salarioPiso:
+                detalhe.salario_piso != null ? Number(detalhe.salario_piso) : null,
+              salarioMediana:
+                detalhe.salario_mediana != null ? Number(detalhe.salario_mediana) : null,
+              salarioTeto:
+                detalhe.salario_teto != null ? Number(detalhe.salario_teto) : null,
             }}
           >
             <div className="flex justify-end">

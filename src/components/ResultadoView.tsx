@@ -1,8 +1,11 @@
-import { Info } from "lucide-react";
+import { Check, Copy, Info } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 
-import { Badge, Card } from "@/components/chlorum";
+import { Badge, Button, Card } from "@/components/chlorum";
 import { GaugeGrade } from "@/components/GaugeGrade";
 import { FATORES, type Resposta } from "@/lib/pesagem";
+import { formatarReal } from "@/lib/salario";
 
 export type ResultadoViewData = {
   cargoNome: string;
@@ -15,6 +18,10 @@ export type ResultadoViewData = {
   faixaMax: number;
   familiaCargo: string;
   respostas: Resposta[];
+  textoFluido?: string | undefined;
+  salarioPiso?: number | null;
+  salarioMediana?: number | null;
+  salarioTeto?: number | null;
 };
 
 export function ResultadoView({
@@ -24,6 +31,20 @@ export function ResultadoView({
   data: ResultadoViewData;
   children?: React.ReactNode;
 }) {
+  const [copiado, setCopiado] = useState(false);
+
+  async function copiar() {
+    if (!data.textoFluido) return;
+    try {
+      await navigator.clipboard.writeText(data.textoFluido);
+      setCopiado(true);
+      toast.success("Texto copiado para a área de transferência.");
+      setTimeout(() => setCopiado(false), 2000);
+    } catch {
+      toast.error("Não foi possível copiar o texto.");
+    }
+  }
+
   return (
     <div className="space-y-6 print-resultado">
       <Card className="text-center">
@@ -55,6 +76,37 @@ export function ResultadoView({
           </Badge>
           <Badge>{data.familiaCargo}</Badge>
         </div>
+
+        {data.textoFluido ? (
+          <div className="mt-6 rounded-2xl border border-border bg-secondary p-5 text-left">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <p className="text-label">Resumo em texto corrido</p>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => void copiar()}
+                data-nao-imprimir
+              >
+                {copiado ? (
+                  <Check className="size-4" aria-hidden />
+                ) : (
+                  <Copy className="size-4" aria-hidden />
+                )}
+                {copiado ? "Copiado" : "Copiar texto"}
+              </Button>
+            </div>
+            <p className="mt-3 text-sm font-light leading-relaxed text-foreground">
+              {data.textoFluido}
+            </p>
+            {data.salarioMediana != null ? (
+              <p className="mt-3 text-xs text-muted-foreground">
+                Salário-base mensal · piso {formatarReal(Number(data.salarioPiso ?? 0))} ·
+                mediana {formatarReal(Number(data.salarioMediana))} · teto{" "}
+                {formatarReal(Number(data.salarioTeto ?? 0))}
+              </p>
+            ) : null}
+          </div>
+        ) : null}
       </Card>
 
       <Card>

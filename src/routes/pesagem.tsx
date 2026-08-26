@@ -1,3 +1,4 @@
+import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { ArrowLeft, ArrowRight, RotateCcw, Save } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
@@ -17,6 +18,11 @@ import {
   type Refinamento,
   type Selecao,
 } from "@/lib/pesagem";
+import {
+  buscarFaixaSalarial,
+  gerarTextoFluido,
+  type TabelaSalarialRow,
+} from "@/lib/salario";
 
 export const Route = createFileRoute("/pesagem")({
   head: () => ({
@@ -102,6 +108,39 @@ function NovaAvaliacao() {
 
   const resultado = useMemo(() => calcularResultado(selecoes), [selecoes]);
 
+  const { data: tabelaSalarial } = useQuery({
+    queryKey: ["tabela_salarial"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("tabela_salarial")
+        .select("*")
+        .order("grade");
+      if (error) throw error;
+      return (data ?? []) as unknown as TabelaSalarialRow[];
+    },
+  });
+
+  const faixaSalarial = useMemo(
+    () => buscarFaixaSalarial(resultado.grade, tabelaSalarial ?? []),
+    [resultado.grade, tabelaSalarial],
+  );
+
+  const textoFluido = useMemo(
+    () =>
+      gerarTextoFluido({
+        cargoNome: identificacao.cargoNome,
+        diretoriaArea: identificacao.diretoriaArea,
+        jaOcupado: identificacao.jaOcupado === "sim",
+        pontos: resultado.pontos,
+        grade: resultado.grade,
+        faixaMin: resultado.faixaMin,
+        faixaMax: resultado.faixaMax,
+        familiaCargo: resultado.familiaCargo,
+        faixaSalarial,
+      }),
+    [identificacao, resultado, faixaSalarial],
+  );
+
   function reiniciar() {
     setIdentificacao(IDENTIFICACAO_VAZIA);
     setSelecoes(FATORES.map(() => ({ ...SELECAO_PADRAO })));
@@ -123,6 +162,12 @@ function NovaAvaliacao() {
       faixa_min: resultado.faixaMin,
       faixa_max: resultado.faixaMax,
       familia_cargo: resultado.familiaCargo,
+      salario_piso: faixaSalarial.status === "ok" ? Number(faixaSalarial.piso_80) : null,
+      salario_mediana:
+        faixaSalarial.status === "ok" ? Number(faixaSalarial.mediana) : null,
+      salario_teto: faixaSalarial.status === "ok" ? Number(faixaSalarial.teto_120) : null,
+      requer_confirmacao_executiva: faixaSalarial.status === "requer_confirmacao",
+      texto_fluido: textoFluido,
     });
     setSalvando(false);
 
@@ -393,6 +438,12 @@ function NovaAvaliacao() {
             reportaA: identificacao.reportaA,
             jaOcupado: identificacao.jaOcupado === "sim",
             ...resultado,
+            textoFluido,
+            salarioPiso: faixaSalarial.status === "ok" ? Number(faixaSalarial.piso_80) : null,
+            salarioMediana:
+              faixaSalarial.status === "ok" ? Number(faixaSalarial.mediana) : null,
+            salarioTeto:
+              faixaSalarial.status === "ok" ? Number(faixaSalarial.teto_120) : null,
           }}
         >
           <div className="flex flex-wrap justify-end gap-3">
