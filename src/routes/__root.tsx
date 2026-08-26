@@ -10,7 +10,7 @@ import {
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 
-import { BrandLockup, BrandParceria } from "@/components/BrandLockup";
+import { BrandLockup } from "@/components/BrandLockup";
 import { ChlorumLogo } from "@/components/ChlorumLogo";
 import { Toaster } from "@/components/ui/sonner";
 import { Wordmark } from "@/components/Wordmark";
@@ -82,7 +82,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { name: "author", content: "Chlorum Solutions" },
+      { name: "author", content: "Gente e Gestão · Chlorum Solutions" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
