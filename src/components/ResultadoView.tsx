@@ -1,5 +1,5 @@
-import { Check, Copy, Info } from "lucide-react";
-import { useState } from "react";
+import { Check, Copy, FileDown, Info } from "lucide-react";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
 
 import { Badge, Button, Card } from "@/components/chlorum";
@@ -32,6 +32,44 @@ export function ResultadoView({
   children?: React.ReactNode;
 }) {
   const [copiado, setCopiado] = useState(false);
+  const [gerandoPdf, setGerandoPdf] = useState(false);
+  const quadroRef = useRef<HTMLDivElement>(null);
+
+  async function gerarPdf() {
+    const alvo = quadroRef.current;
+    if (!alvo) return;
+    setGerandoPdf(true);
+    try {
+      const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
+        import("html2canvas-pro"),
+        import("jspdf"),
+      ]);
+      const canvas = await html2canvas(alvo, {
+        scale: 2,
+        backgroundColor: "#ffffff",
+        ignoreElements: (el) => el.hasAttribute("data-nao-imprimir"),
+      });
+      const pdf = new jsPDF({ orientation: "portrait", unit: "pt", format: "a4" });
+      const margem = 32;
+      const larguraUtil = pdf.internal.pageSize.getWidth() - margem * 2;
+      const altura = (canvas.height / canvas.width) * larguraUtil;
+      pdf.addImage(
+        canvas.toDataURL("image/jpeg", 0.95),
+        "JPEG",
+        margem,
+        margem,
+        larguraUtil,
+        altura,
+      );
+      const nome = data.cargoNome.trim().replace(/[^\p{L}\p{N}]+/gu, "-").toLowerCase();
+      pdf.save(`pre-pesagem-${nome || "cargo"}.pdf`);
+      toast.success("PDF gerado com sucesso.");
+    } catch {
+      toast.error("Não foi possível gerar o PDF.");
+    } finally {
+      setGerandoPdf(false);
+    }
+  }
 
   async function copiar() {
     if (!data.textoFluido) return;
@@ -47,7 +85,7 @@ export function ResultadoView({
 
   return (
     <div className="space-y-6 print-resultado">
-      <Card className="text-center">
+      <Card className="text-center" ref={quadroRef}>
         <Badge>Resultado da pré-pesagem</Badge>
         <h2 className="mt-4 text-2xl sm:text-3xl">{data.cargoNome}</h2>
         <p className="mt-1 text-sm text-muted-foreground">
@@ -79,20 +117,23 @@ export function ResultadoView({
 
         {data.textoFluido ? (
           <div className="mt-6 rounded-2xl border border-border bg-secondary p-5 text-left">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <p className="text-label">Resumo em texto corrido</p>
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() => void copiar()}
-                data-nao-imprimir
-              >
+            <div className="flex flex-wrap items-center justify-end gap-2" data-nao-imprimir>
+              <Button variant="secondary" size="sm" onClick={() => void copiar()}>
                 {copiado ? (
                   <Check className="size-4" aria-hidden />
                 ) : (
                   <Copy className="size-4" aria-hidden />
                 )}
                 {copiado ? "Copiado" : "Copiar texto"}
+              </Button>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => void gerarPdf()}
+                disabled={gerandoPdf}
+              >
+                <FileDown className="size-4" aria-hidden />
+                {gerandoPdf ? "Gerando PDF…" : "Gerar PDF"}
               </Button>
             </div>
             <p className="mt-3 text-sm font-light leading-relaxed text-foreground">
