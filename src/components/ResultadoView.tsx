@@ -18,7 +18,7 @@ export type ResultadoViewData = {
   faixaMax: number;
   familiaCargo: string;
   respostas: Resposta[];
-  textoFluido?: string;
+  textoFluido?: string | undefined;
   salarioPiso?: number | null;
   salarioMediana?: number | null;
   salarioTeto?: number | null;
