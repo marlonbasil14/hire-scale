@@ -8,7 +8,15 @@ import { ResultadoView } from "@/components/ResultadoView";
 import { Badge, Button, Card, Field, Input, Select } from "@/components/chlorum";
 import { supabase } from "@/integrations/supabase/client";
 import { lerColaborador, type Colaborador } from "@/lib/colaborador";
-import { FATORES, calcularResultado } from "@/lib/pesagem";
+import {
+  FATORES,
+  ROTULO_REFINAMENTO,
+  SELECAO_PADRAO,
+  calcularResultado,
+  temRefinamento,
+  type Refinamento,
+  type Selecao,
+} from "@/lib/pesagem";
 
 export const Route = createFileRoute("/pesagem")({
   head: () => ({
@@ -53,7 +61,7 @@ const ETAPAS = [
   {
     titulo: "2 · Questionário de 8 fatores",
     texto:
-      "Responda um fator por tela, deslizando o nível que melhor descreve o cargo — do menor ao maior grau de exigência.",
+      "Responda um fator por tela, escolhendo o nível que melhor descreve o cargo e, quando útil, refinando entre abaixo, típica ou acima da faixa.",
   },
   {
     titulo: "3 · Resultado e histórico",
@@ -70,8 +78,9 @@ function NovaAvaliacao() {
   );
   const [identificacao, setIdentificacao] = useState<Identificacao>(IDENTIFICACAO_VAZIA);
   const [pergunta, setPergunta] = useState(0);
-  const [indices, setIndices] = useState<number[]>(() => FATORES.map(() => 0));
-  const [tocados, setTocados] = useState<boolean[]>(() => FATORES.map(() => false));
+  const [selecoes, setSelecoes] = useState<Selecao[]>(() =>
+    FATORES.map(() => ({ ...SELECAO_PADRAO })),
+  );
   const [salvando, setSalvando] = useState(false);
   const [salvo, setSalvo] = useState(false);
 
@@ -91,12 +100,11 @@ function NovaAvaliacao() {
     identificacao.reportaA.trim() !== "" &&
     identificacao.jaOcupado !== "";
 
-  const resultado = useMemo(() => calcularResultado(indices), [indices]);
+  const resultado = useMemo(() => calcularResultado(selecoes), [selecoes]);
 
   function reiniciar() {
     setIdentificacao(IDENTIFICACAO_VAZIA);
-    setIndices(FATORES.map(() => 0));
-    setTocados(FATORES.map(() => false));
+    setSelecoes(FATORES.map(() => ({ ...SELECAO_PADRAO })));
     setPergunta(0);
     setSalvo(false);
     setEtapa("identificacao");
@@ -135,7 +143,13 @@ function NovaAvaliacao() {
   }
 
   const fator = FATORES[pergunta]!;
-  const indiceAtual = indices[pergunta] ?? 0;
+  const selecaoAtual = selecoes[pergunta] ?? SELECAO_PADRAO;
+  const refinavel = temRefinamento(fator);
+
+  function atualizarSelecao(selecao: Selecao) {
+    setSelecoes((s) => s.map((v, i) => (i === pergunta ? selecao : v)));
+  }
+
   const ultima = pergunta === FATORES.length - 1;
 
   return (
@@ -358,7 +372,7 @@ function NovaAvaliacao() {
               Voltar
             </Button>
             <Button
-              disabled={!tocados[pergunta]}
+              disabled={selecaoAtual.indice < 0}
               onClick={() => {
                 if (ultima) setEtapa("resultado");
                 else setPergunta((p) => p + 1);
