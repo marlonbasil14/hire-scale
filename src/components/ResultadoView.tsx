@@ -25,7 +25,7 @@ export function ResultadoView({
   children?: React.ReactNode;
 }) {
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 print-resultado">
       <Card className="text-center">
         <Badge>Resultado da pré-pesagem</Badge>
         <h2 className="mt-4 text-2xl sm:text-3xl">{data.cargoNome}</h2>
@@ -42,6 +42,9 @@ export function ResultadoView({
           <p className="text-label">Pontuação total estimada</p>
           <p className="text-5xl font-extrabold tracking-tight text-primary sm:text-6xl">
             {Math.round(data.pontos).toLocaleString("pt-BR")}
+            <span className="ml-2 align-baseline text-lg font-bold text-muted-foreground">
+              pts
+            </span>
           </p>
         </div>
 
@@ -68,7 +71,9 @@ export function ResultadoView({
                   {FATORES[i]?.grupo}
                 </p>
               </div>
-              <p className="text-sm text-accent-foreground">{resposta.nivel}</p>
+              <p className="text-sm text-accent-foreground">
+                {resposta.nome ?? resposta.nivel}
+              </p>
             </li>
           ))}
         </ul>

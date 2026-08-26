@@ -206,3 +206,22 @@
     box-shadow: 0 0 0 3px var(--color-ring);
   }
 }
+
+@media print {
+  body {
+    background: #fff;
+  }
+  header,
+  footer,
+  nav,
+  [data-nao-imprimir] {
+    display: none !important;
+  }
+  .print-resultado {
+    display: block !important;
+  }
+  .print-resultado button,
+  .print-resultado a[role="button"] {
+    display: none !important;
+  }
+}
