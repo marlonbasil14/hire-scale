@@ -23,7 +23,7 @@ import type { Resposta } from "@/lib/pesagem";
 export const Route = createFileRoute("/historico")({
   head: () => ({
     meta: [
-      { title: "Histórico de avaliações de cargos — Chlorum Solutions" },
+      { title: "Histórico de avaliações de cargos — Gente e Gestão" },
       {
         name: "description",
         content:
@@ -31,7 +31,7 @@ export const Route = createFileRoute("/historico")({
       },
       {
         property: "og:title",
-        content: "Histórico de avaliações de cargos — Chlorum Solutions",
+        content: "Histórico de avaliações de cargos — Gente e Gestão",
       },
       {
         property: "og:description",

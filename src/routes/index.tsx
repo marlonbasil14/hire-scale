@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import { useState } from "react";
 
-import { ChlorumLogo } from "@/components/ChlorumLogo";
+import { BrandLockup, BrandParceria } from "@/components/BrandLockup";
 import { Wordmark } from "@/components/Wordmark";
 import { Button, Field, Input } from "@/components/chlorum";
 import { salvarColaborador } from "@/lib/colaborador";
@@ -10,13 +10,13 @@ import { salvarColaborador } from "@/lib/colaborador";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Painel de Pesagem de Cargos — Chlorum Solutions" },
+      { title: "Painel de Pesagem de Cargos — Gente e Gestão" },
       {
         name: "description",
         content:
-          "Identifique-se para acessar o painel de pré-pesagem de cargos da Chlorum Solutions: 8 fatores, pontuação, grade de 1 a 20 e família de cargo.",
+          "Identifique-se para acessar o painel de pré-pesagem de cargos de Gente e Gestão: 8 fatores, pontuação, grade de 1 a 20 e família de cargo.",
       },
-      { property: "og:title", content: "Painel de Pesagem de Cargos — Chlorum Solutions" },
+      { property: "og:title", content: "Painel de Pesagem de Cargos — Gente e Gestão" },
       {
         property: "og:description",
         content:
@@ -51,7 +51,8 @@ function HeroPage() {
     <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center px-4 py-12 sm:px-6">
       <div className="card-surface w-full max-w-xl px-6 py-10 text-center sm:px-12 sm:py-12">
         <div className="flex flex-col items-center gap-6">
-          <ChlorumLogo />
+          <BrandLockup variante="gestao" className="text-[1.7rem]" />
+          <BrandParceria somenteParceiro className="text-sm" />
 
           <h1 className="leading-none">
             <Wordmark className="text-3xl sm:text-4xl" />
@@ -102,7 +103,7 @@ function HeroPage() {
           </form>
 
           <p className="text-xs font-light text-muted-foreground/70">
-            Uso interno Chlorum Solutions · Os dados informados servem apenas para
+            Uso interno Gente e Gestão · Os dados informados servem apenas para
             registrar quem realizou a pré-pesagem.
           </p>
         </div>

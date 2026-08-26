@@ -10,6 +10,8 @@ import {
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 
+import { BrandLockup } from "@/components/BrandLockup";
+import { ChlorumLogo } from "@/components/ChlorumLogo";
 import { Toaster } from "@/components/ui/sonner";
 import { Wordmark } from "@/components/Wordmark";
 import appCss from "../styles.css?url";
@@ -80,7 +82,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { name: "author", content: "Chlorum Solutions" },
+      { name: "author", content: "Gente e Gestão · Chlorum Solutions" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -90,7 +92,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..900;1,200..900&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..900;1,200..900&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Fraunces:ital,opsz,wght@0,9..144,400..800;1,9..144,400..800&display=swap",
       },
       { rel: "icon", type: "image/png", href: "/favicon.png" },
     ],
@@ -125,11 +127,9 @@ function SiteNav() {
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-surface/90 backdrop-blur">
       <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6">
-        <Link to="/" className="flex items-baseline gap-2">
-          <span className="text-lg font-extrabold tracking-tight text-primary">
-            Chlorum
-          </span>
-          <Wordmark className="text-base" />
+        <Link to="/" className="flex items-center gap-3">
+          <BrandLockup variante="gestao" className="text-base" />
+          <Wordmark className="hidden text-base sm:inline-block" />
         </Link>
         <nav className="flex items-center gap-1">
           <Link
@@ -164,11 +164,25 @@ function RootComponent() {
           <Outlet />
         </main>
         <footer className="mt-16 bg-navy px-4 py-8 text-navy-foreground sm:px-6">
-          <div className="mx-auto max-w-5xl space-y-1">
-            <p className="text-sm font-bold">Chlorum Solutions · Pessoas e Cultura</p>
-            <p className="text-xs font-light text-navy-foreground/70">
-              Pré-pesagem de cargos calibrada no método Hay Guide Chart-Profile.
-            </p>
+          <div className="mx-auto flex max-w-5xl flex-wrap items-end justify-between gap-6">
+            <div className="space-y-2">
+              <BrandLockup variante="gestao" reversa className="text-lg" />
+              <p className="text-xs font-light text-navy-foreground/70">
+                Em parceria com Gente e Remuneração · Pré-pesagem de cargos calibrada no
+                método Hay Guide Chart-Profile.
+              </p>
+            </div>
+            <div className="ml-auto flex flex-col items-end gap-2">
+              <BrandLockup
+                variante="remuneracao"
+                comAssinaturaCorporativa={false}
+                reversa
+                className="text-base"
+              />
+              <span className="rounded-lg bg-white px-3 py-2">
+                <ChlorumLogo className="h-7" />
+              </span>
+            </div>
           </div>
         </footer>
       </div>

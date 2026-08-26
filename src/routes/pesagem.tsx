@@ -27,13 +27,13 @@ import {
 export const Route = createFileRoute("/pesagem")({
   head: () => ({
     meta: [
-      { title: "Etapas da pesagem de cargos — Chlorum Solutions" },
+      { title: "Etapas da pesagem de cargos — Gente e Gestão" },
       {
         name: "description",
         content:
           "Percorra as três etapas da pré-pesagem: identificação do cargo, questionário de 8 fatores e resultado com grade de 1 a 20.",
       },
-      { property: "og:title", content: "Etapas da pesagem de cargos — Chlorum Solutions" },
+      { property: "og:title", content: "Etapas da pesagem de cargos — Gente e Gestão" },
       {
         property: "og:description",
         content:
