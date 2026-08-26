@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { Badge, Button, Card } from "@/components/chlorum";
 import { GaugeGrade } from "@/components/GaugeGrade";
 import { FATORES, type Resposta } from "@/lib/pesagem";
+import { formatarReal } from "@/lib/salario";
 
 export type ResultadoViewData = {
   cargoNome: string;
