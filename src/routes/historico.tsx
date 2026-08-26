@@ -151,6 +151,13 @@ function Historico() {
               faixaMax: detalhe.faixa_max,
               familiaCargo: detalhe.familia_cargo,
               respostas: detalhe.respostas ?? [],
+              textoFluido: detalhe.texto_fluido ?? undefined,
+              salarioPiso:
+                detalhe.salario_piso != null ? Number(detalhe.salario_piso) : null,
+              salarioMediana:
+                detalhe.salario_mediana != null ? Number(detalhe.salario_mediana) : null,
+              salarioTeto:
+                detalhe.salario_teto != null ? Number(detalhe.salario_teto) : null,
             }}
           >
             <div className="flex justify-end">
