@@ -8,7 +8,15 @@ import { ResultadoView } from "@/components/ResultadoView";
 import { Badge, Button, Card, Field, Input, Select } from "@/components/chlorum";
 import { supabase } from "@/integrations/supabase/client";
 import { lerColaborador, type Colaborador } from "@/lib/colaborador";
-import { FATORES, calcularResultado } from "@/lib/pesagem";
+import {
+  FATORES,
+  ROTULO_REFINAMENTO,
+  SELECAO_PADRAO,
+  calcularResultado,
+  temRefinamento,
+  type Refinamento,
+  type Selecao,
+} from "@/lib/pesagem";
 
 export const Route = createFileRoute("/pesagem")({
   head: () => ({
@@ -53,7 +61,7 @@ const ETAPAS = [
   {
     titulo: "2 · Questionário de 8 fatores",
     texto:
-      "Responda um fator por tela, deslizando o nível que melhor descreve o cargo — do menor ao maior grau de exigência.",
+      "Responda um fator por tela, escolhendo o nível que melhor descreve o cargo e, quando útil, refinando entre abaixo, típica ou acima da faixa.",
   },
   {
     titulo: "3 · Resultado e histórico",
@@ -70,8 +78,9 @@ function NovaAvaliacao() {
   );
   const [identificacao, setIdentificacao] = useState<Identificacao>(IDENTIFICACAO_VAZIA);
   const [pergunta, setPergunta] = useState(0);
-  const [indices, setIndices] = useState<number[]>(() => FATORES.map(() => 0));
-  const [tocados, setTocados] = useState<boolean[]>(() => FATORES.map(() => false));
+  const [selecoes, setSelecoes] = useState<Selecao[]>(() =>
+    FATORES.map(() => ({ ...SELECAO_PADRAO })),
+  );
   const [salvando, setSalvando] = useState(false);
   const [salvo, setSalvo] = useState(false);
 
@@ -91,12 +100,11 @@ function NovaAvaliacao() {
     identificacao.reportaA.trim() !== "" &&
     identificacao.jaOcupado !== "";
 
-  const resultado = useMemo(() => calcularResultado(indices), [indices]);
+  const resultado = useMemo(() => calcularResultado(selecoes), [selecoes]);
 
   function reiniciar() {
     setIdentificacao(IDENTIFICACAO_VAZIA);
-    setIndices(FATORES.map(() => 0));
-    setTocados(FATORES.map(() => false));
+    setSelecoes(FATORES.map(() => ({ ...SELECAO_PADRAO })));
     setPergunta(0);
     setSalvo(false);
     setEtapa("identificacao");
@@ -135,7 +143,13 @@ function NovaAvaliacao() {
   }
 
   const fator = FATORES[pergunta]!;
-  const indiceAtual = indices[pergunta] ?? 0;
+  const selecaoAtual = selecoes[pergunta] ?? SELECAO_PADRAO;
+  const refinavel = temRefinamento(fator);
+
+  function atualizarSelecao(selecao: Selecao) {
+    setSelecoes((s) => s.map((v, i) => (i === pergunta ? selecao : v)));
+  }
+
   const ultima = pergunta === FATORES.length - 1;
 
   return (
@@ -149,7 +163,7 @@ function NovaAvaliacao() {
         }
       />
 
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-3" data-nao-imprimir>
         {ETAPAS.map((e) => (
           <Card key={e.titulo} className="space-y-2">
             <p className="text-label text-primary">{e.titulo}</p>
@@ -257,37 +271,94 @@ function NovaAvaliacao() {
           </div>
 
           <div className="space-y-4">
-            <input
-              type="range"
-              className="range-brand"
-              min={0}
-              max={fator.niveis.length - 1}
-              step={1}
-              value={indiceAtual}
-              aria-label={fator.titulo}
-              onChange={(e) => {
-                const valor = Number(e.target.value);
-                setIndices((s) => s.map((v, i) => (i === pergunta ? valor : v)));
-                setTocados((s) => s.map((v, i) => (i === pergunta ? true : v)));
-              }}
-            />
-            <div className="flex justify-between text-xs text-muted-foreground">
-              <span>{fator.niveis[0]}</span>
-              <span>{fator.niveis[fator.niveis.length - 1]}</span>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {fator.niveis.map((nivel, i) => {
+                const ativo = selecaoAtual.indice === i;
+                return (
+                  <div
+                    key={nivel}
+                    className={`rounded-2xl border p-4 transition-[background-color,border-color] duration-200 ease-out ${
+                      ativo
+                        ? "border-primary bg-accent-soft"
+                        : "border-border bg-card hover:border-primary/40"
+                    }`}
+                  >
+                    <button
+                      type="button"
+                      aria-pressed={ativo}
+                      className="focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring w-full rounded-lg text-left"
+                      onClick={() =>
+                        atualizarSelecao({ indice: i, refinamento: "tipica" })
+                      }
+                    >
+                      <span className="text-eyebrow text-muted-foreground">
+                        Nível {i + 1}
+                      </span>
+                      <span
+                        className={`mt-1 block text-sm font-extrabold ${
+                          ativo ? "text-primary" : "text-foreground"
+                        }`}
+                      >
+                        {nivel}
+                      </span>
+                      <span className="mt-1 line-clamp-2 block text-xs font-light leading-relaxed text-muted-foreground">
+                        {fator.descricoes[i]}
+                      </span>
+                    </button>
+
+                    {ativo && refinavel && (
+                      <div
+                        className="mt-3 grid grid-cols-3 gap-1 rounded-full bg-accent p-1"
+                        role="group"
+                        aria-label="Refinamento do nível"
+                      >
+                        {(["abaixo", "tipica", "acima"] as Refinamento[]).map((r) => (
+                          <button
+                            key={r}
+                            type="button"
+                            aria-pressed={selecaoAtual.refinamento === r}
+                            onClick={() =>
+                              atualizarSelecao({ indice: i, refinamento: r })
+                            }
+                            className={`focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring rounded-full px-2 py-1.5 text-[11px] font-bold transition-colors duration-150 ease-out ${
+                              selecaoAtual.refinamento === r
+                                ? "bg-primary text-primary-foreground"
+                                : "text-accent-foreground hover:bg-card"
+                            }`}
+                          >
+                            {ROTULO_REFINAMENTO[r]}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
 
             <div className="rounded-2xl border border-accent bg-accent-soft p-5">
-              <p className="text-label text-accent-foreground/70">
-                Nível {indiceAtual + 1} de {fator.niveis.length}
-              </p>
-              <p className="mt-1 text-lg font-extrabold text-accent-foreground">
-                {fator.niveis[indiceAtual]}
-              </p>
-              <p className="mt-2 text-sm text-accent-foreground/90">
-                {fator.descricoes[indiceAtual]}
-              </p>
+              {selecaoAtual.indice < 0 ? (
+                <p className="text-sm font-light text-accent-foreground/90">
+                  Selecione o nível que melhor descreve o cargo para ver a descrição
+                  completa.
+                </p>
+              ) : (
+                <>
+                  <p className="text-label text-accent-foreground/70">
+                    Nível {selecaoAtual.indice + 1} de {fator.niveis.length}
+                    {refinavel ? ` · ${ROTULO_REFINAMENTO[selecaoAtual.refinamento]}` : ""}
+                  </p>
+                  <p className="mt-1 text-lg font-extrabold text-accent-foreground">
+                    {fator.niveis[selecaoAtual.indice]}
+                  </p>
+                  <p className="mt-2 text-sm font-light text-accent-foreground/90">
+                    {fator.descricoes[selecaoAtual.indice]}
+                  </p>
+                </>
+              )}
             </div>
           </div>
+
 
           <div className="flex items-center justify-between gap-3">
             <Button
@@ -301,7 +372,7 @@ function NovaAvaliacao() {
               Voltar
             </Button>
             <Button
-              disabled={!tocados[pergunta]}
+              disabled={selecaoAtual.indice < 0}
               onClick={() => {
                 if (ultima) setEtapa("resultado");
                 else setPergunta((p) => p + 1);
