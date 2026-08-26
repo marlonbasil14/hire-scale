@@ -96,13 +96,23 @@ export function BrandLockup({
 }
 
 /** Linha "Gente e Gestão · em parceria com Gente e Remuneração". */
-export function BrandParceria({ className }: { className?: string }) {
+export function BrandParceria({
+  className,
+  somenteParceiro = false,
+}: {
+  className?: string | undefined;
+  somenteParceiro?: boolean | undefined;
+}) {
   return (
     <span className={cn("inline-flex flex-wrap items-center justify-center gap-x-2 gap-y-1", className)}>
-      <span className="font-lockup font-semibold" style={{ color: CONFIG.gestao.cor }}>
-        Gente e <em className="italic">Gestão</em>
-      </span>
-      <span className="text-muted-foreground">·</span>
+      {somenteParceiro ? null : (
+        <>
+          <span className="font-lockup font-semibold" style={{ color: CONFIG.gestao.cor }}>
+            Gente e <em className="italic">Gestão</em>
+          </span>
+          <span className="text-muted-foreground">·</span>
+        </>
+      )}
       <span className="text-muted-foreground">em parceria com</span>
       <span className="font-lockup font-semibold" style={{ color: CONFIG.remuneracao.cor }}>
         Gente e <em className="italic">Remuneração</em>
