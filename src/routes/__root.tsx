@@ -10,6 +10,8 @@ import {
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 
+import { BrandLockup, BrandParceria } from "@/components/BrandLockup";
+import { ChlorumLogo } from "@/components/ChlorumLogo";
 import { Toaster } from "@/components/ui/sonner";
 import { Wordmark } from "@/components/Wordmark";
 import appCss from "../styles.css?url";
@@ -125,11 +127,9 @@ function SiteNav() {
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-surface/90 backdrop-blur">
       <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6">
-        <Link to="/" className="flex items-baseline gap-2">
-          <span className="text-lg font-extrabold tracking-tight text-primary">
-            Chlorum
-          </span>
-          <Wordmark className="text-base" />
+        <Link to="/" className="flex items-center gap-3">
+          <BrandLockup variante="gestao" className="text-base" />
+          <Wordmark className="hidden text-base sm:inline-block" />
         </Link>
         <nav className="flex items-center gap-1">
           <Link
