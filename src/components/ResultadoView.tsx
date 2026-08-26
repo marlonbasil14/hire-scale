@@ -32,6 +32,44 @@ export function ResultadoView({
   children?: React.ReactNode;
 }) {
   const [copiado, setCopiado] = useState(false);
+  const [gerandoPdf, setGerandoPdf] = useState(false);
+  const quadroRef = useRef<HTMLDivElement>(null);
+
+  async function gerarPdf() {
+    const alvo = quadroRef.current;
+    if (!alvo) return;
+    setGerandoPdf(true);
+    try {
+      const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
+        import("html2canvas-pro"),
+        import("jspdf"),
+      ]);
+      const canvas = await html2canvas(alvo, {
+        scale: 2,
+        backgroundColor: "#ffffff",
+        ignoreElements: (el) => el.hasAttribute("data-nao-imprimir"),
+      });
+      const pdf = new jsPDF({ orientation: "portrait", unit: "pt", format: "a4" });
+      const margem = 32;
+      const larguraUtil = pdf.internal.pageSize.getWidth() - margem * 2;
+      const altura = (canvas.height / canvas.width) * larguraUtil;
+      pdf.addImage(
+        canvas.toDataURL("image/jpeg", 0.95),
+        "JPEG",
+        margem,
+        margem,
+        larguraUtil,
+        altura,
+      );
+      const nome = data.cargoNome.trim().replace(/[^\p{L}\p{N}]+/gu, "-").toLowerCase();
+      pdf.save(`pre-pesagem-${nome || "cargo"}.pdf`);
+      toast.success("PDF gerado com sucesso.");
+    } catch {
+      toast.error("Não foi possível gerar o PDF.");
+    } finally {
+      setGerandoPdf(false);
+    }
+  }
 
   async function copiar() {
     if (!data.textoFluido) return;
