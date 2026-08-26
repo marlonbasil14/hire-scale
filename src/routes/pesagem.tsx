@@ -102,6 +102,39 @@ function NovaAvaliacao() {
 
   const resultado = useMemo(() => calcularResultado(selecoes), [selecoes]);
 
+  const { data: tabelaSalarial } = useQuery({
+    queryKey: ["tabela_salarial"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("tabela_salarial")
+        .select("*")
+        .order("grade");
+      if (error) throw error;
+      return (data ?? []) as unknown as TabelaSalarialRow[];
+    },
+  });
+
+  const faixaSalarial = useMemo(
+    () => buscarFaixaSalarial(resultado.grade, tabelaSalarial ?? []),
+    [resultado.grade, tabelaSalarial],
+  );
+
+  const textoFluido = useMemo(
+    () =>
+      gerarTextoFluido({
+        cargoNome: identificacao.cargoNome,
+        diretoriaArea: identificacao.diretoriaArea,
+        jaOcupado: identificacao.jaOcupado === "sim",
+        pontos: resultado.pontos,
+        grade: resultado.grade,
+        faixaMin: resultado.faixaMin,
+        faixaMax: resultado.faixaMax,
+        familiaCargo: resultado.familiaCargo,
+        faixaSalarial,
+      }),
+    [identificacao, resultado, faixaSalarial],
+  );
+
   function reiniciar() {
     setIdentificacao(IDENTIFICACAO_VAZIA);
     setSelecoes(FATORES.map(() => ({ ...SELECAO_PADRAO })));
