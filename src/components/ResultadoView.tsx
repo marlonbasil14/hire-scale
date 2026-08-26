@@ -117,20 +117,23 @@ export function ResultadoView({
 
         {data.textoFluido ? (
           <div className="mt-6 rounded-2xl border border-border bg-secondary p-5 text-left">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <p className="text-label">Resumo em texto corrido</p>
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() => void copiar()}
-                data-nao-imprimir
-              >
+            <div className="flex flex-wrap items-center justify-end gap-2" data-nao-imprimir>
+              <Button variant="secondary" size="sm" onClick={() => void copiar()}>
                 {copiado ? (
                   <Check className="size-4" aria-hidden />
                 ) : (
                   <Copy className="size-4" aria-hidden />
                 )}
                 {copiado ? "Copiado" : "Copiar texto"}
+              </Button>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => void gerarPdf()}
+                disabled={gerandoPdf}
+              >
+                <FileDown className="size-4" aria-hidden />
+                {gerandoPdf ? "Gerando PDF…" : "Gerar PDF"}
               </Button>
             </div>
             <p className="mt-3 text-sm font-light leading-relaxed text-foreground">
