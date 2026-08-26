@@ -162,6 +162,12 @@ function NovaAvaliacao() {
       faixa_min: resultado.faixaMin,
       faixa_max: resultado.faixaMax,
       familia_cargo: resultado.familiaCargo,
+      salario_piso: faixaSalarial.status === "ok" ? Number(faixaSalarial.piso_80) : null,
+      salario_mediana:
+        faixaSalarial.status === "ok" ? Number(faixaSalarial.mediana) : null,
+      salario_teto: faixaSalarial.status === "ok" ? Number(faixaSalarial.teto_120) : null,
+      requer_confirmacao_executiva: faixaSalarial.status === "requer_confirmacao",
+      texto_fluido: textoFluido,
     });
     setSalvando(false);
 
