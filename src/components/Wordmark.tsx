@@ -1,24 +1,22 @@
 import { cn } from "@/lib/utils";
 
+import wordmark from "@/assets/people-intelligence.png.asset.json";
+
 /**
- * Wordmark "People Intelligence" — tipografia serifada da wordmark
- * do projeto People Push Dashboard: "People" em bold, "Intelligence"
- * em bold itálico no azul da marca.
+ * Wordmark oficial "People Intelligence".
+ * A altura acompanha o font-size do contexto (1em), preservando a proporção.
  */
 export function Wordmark({
   className,
   ...props
-}: React.ComponentProps<"span">) {
+}: Omit<React.ComponentProps<"img">, "src" | "alt">) {
   return (
-    <span
-      className={cn(
-        "font-wordmark whitespace-nowrap font-bold normal-case tracking-normal",
-        className,
-      )}
+    <img
+      src={wordmark.url}
+      alt="People Intelligence"
+      className={cn("inline-block h-[1.25em] w-auto select-none align-middle", className)}
+      draggable={false}
       {...props}
-    >
-      <span className="text-foreground">People</span>{" "}
-      <span className="italic text-primary">Intelligence</span>
-    </span>
+    />
   );
 }
