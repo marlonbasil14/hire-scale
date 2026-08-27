@@ -95,7 +95,7 @@ export function BrandLockup({
   );
 }
 
-/** Linha "Gente e Gestão · em parceria com Gente e Remuneração". */
+/** Linha "Gente e Gestão · Gente e Remuneração". */
 export function BrandParceria({
   className,
   somenteParceiro = false,
@@ -113,7 +113,6 @@ export function BrandParceria({
           <span className="text-muted-foreground">·</span>
         </>
       )}
-      <span className="text-muted-foreground">em parceria com</span>
       <span className="font-lockup font-semibold" style={{ color: CONFIG.remuneracao.cor }}>
         Gente e <em className="italic">Remuneração</em>
       </span>
