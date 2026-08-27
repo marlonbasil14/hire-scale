@@ -168,8 +168,7 @@ function RootComponent() {
             <div className="space-y-2">
               <BrandLockup variante="gestao" reversa className="text-lg" />
               <p className="text-xs font-light text-navy-foreground/70">
-                Em parceria com Gente e Remuneração · Pré-pesagem de cargos calibrada no
-                método Hay Guide Chart-Profile.
+                Pré-pesagem de cargos calibrada no método Hay Guide Chart-Profile.
               </p>
             </div>
             <div className="ml-auto flex flex-col items-end gap-2">
