@@ -135,7 +135,6 @@ function NovaAvaliacao() {
         grade: resultado.grade,
         faixaMin: resultado.faixaMin,
         faixaMax: resultado.faixaMax,
-        familiaCargo: resultado.familiaCargo,
         faixaSalarial,
       }),
     [identificacao, resultado, faixaSalarial],
@@ -166,7 +165,6 @@ function NovaAvaliacao() {
       salario_mediana:
         faixaSalarial.status === "ok" ? Number(faixaSalarial.mediana) : null,
       salario_teto: faixaSalarial.status === "ok" ? Number(faixaSalarial.teto_120) : null,
-      requer_confirmacao_executiva: faixaSalarial.status === "requer_confirmacao",
       texto_fluido: textoFluido,
     });
     setSalvando(false);
