@@ -84,7 +84,7 @@ function HeroPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="nome@chlorum.com.br"
+                placeholder="nome@chlorumsolutions.com"
                 autoComplete="email"
               />
             </Field>
